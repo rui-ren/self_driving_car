@@ -23,4 +23,5 @@
 6. `./`: run file
 7. `start notepad++`: use notepad++ to open file
 8. `notepad `: open file as .txt editor
+9. `mkdir`: make a new file or directory
 
