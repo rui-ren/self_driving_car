@@ -1,7 +1,6 @@
 import os
 import random
-from PIL import image
-
+from PIL import Image
 import cv2
 import argparse
 
@@ -16,15 +15,28 @@ def get_filePathList(dirPath, partOfFileName=''):
 
 # select the images from the documents
 def select_qualifiedImages(in_dirPath, out_dirPath, in_suffix, out_suffix, sample_number, required_width, required_height):
-    imageFilePath_list = get_filePathList(in_direPath, in_suffix)
+    """
+    argments: 
+    in_dirPath: the original data path
+    out_dirPath: the output data path
+    in_suffix: file name
+    out_suffix: file name
+    sample_number: the number of figure
+    required_width: the required width
+    required_height: the required height
+    """
+    
+    imageFilePath_list = get_filePathList(in_dirPath, in_suffix)
     random.shuffle(imageFilePath_list)
     if not os.path.isdir(out_dirPath):
+        # make new directory
         os.makedirs(out_dirPath)
     count = 0
 
     for i, imageFilePath in enumerate(imageFilePath_list):
         image = Image.open(imageFilePath)
         image_width, image_height = image.size
+
         if image_width >= required_width and image_height >= required_height:
             count += 1
             # output file direction
@@ -36,10 +48,13 @@ def select_qualifiedImages(in_dirPath, out_dirPath, in_suffix, out_suffix, sampl
             break
 
 # change the command line argument
+# so lazy do not wanna type too much
+
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--in_dir', type=str, default='../resources/n01440764', help='input')
-    parser.add_argument('-o', '--out_dir', type=str, default='../resources/selected_images', help='output')
+    print("please clean the data file")
+    parser.add_argument('-i', '--in_dir', type=str, default='D:/Deep_learning/project_1/001_resorces/n01440764', help='input file')
+    parser.add_argument('-o', '--out_dir', type=str, default='D:/Deep_learning/project_1/001_resorces/selected_images', help='output file')
     parser.add_argument('--in_suffix', type=str, default='.JPEG')
     parser.add_argument('--out_suffix', type=str, default='.jpg')
     parser.add_argument('-n', '--number', type=int, default=200)
@@ -61,6 +76,8 @@ if __name__ == "__main__":
     in_suffix = '.' + in_suffix.lstrip('.')
     out_suffix = argument_namespace.out_suffix.strip()
     out_suffix = '.' + out_suffix.lstrip('.')
+    required_width = argument_namespace.width
+    required_height = argument_namespace.height
     select_qualifiedImages(in_dirPath, out_dirPath, in_suffix, out_suffix, sample_number, required_width, required_height)
     out_dirPath = os.path.abspath(out_dirPath)
     print('the qualified picture and put in the file: %s' %out_dirPath)
